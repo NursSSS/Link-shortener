@@ -15,4 +15,9 @@ export class LinkController {
     async createShortLinks(@Body() dto: CreateLinkDto){
         return await this.service.createShortLink(dto)
     }
+
+    @Get(':mail')
+    async filter(@Param('mail') mail: string){
+        return await this.service.filter(mail)
+    }
 }

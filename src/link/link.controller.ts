@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Redirect } from '@nestjs/common';
 import { CreateLinkDto } from './dto';
 import { LinkService } from './link.service';
 
@@ -19,5 +19,11 @@ export class LinkController {
     @Get(':mail')
     async filter(@Param('mail') mail: string){
         return await this.service.filter(mail)
+    }
+
+    @Get('re/:key')
+    @Redirect('', 302)
+    async redirect(@Param('key') key: string){
+        return await this.service.redirect(key)
     }
 }

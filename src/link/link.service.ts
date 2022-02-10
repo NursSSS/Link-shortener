@@ -26,7 +26,7 @@ export class LinkService {
         return await this.entity.find( {email: mail} )
     }
 
-    @Redirect()
+    
     async redirect(key: string){
         const link = await this.entity.findOne( {_key: key} )
         return { statusCode: 302, url: link.original_link}

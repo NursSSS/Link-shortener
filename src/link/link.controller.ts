@@ -1,12 +1,18 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { CreateLinkDto } from './dto';
 import { LinkService } from './link.service';
 
 @Controller('link')
 export class LinkController {
     constructor( private readonly service: LinkService ) {}
 
-    @Get(':email')
-    async findAll(@Param('email') email: string){
-        return await this.service.findAll(email)
+    @Get()
+    async findAll(){
+        return await this.service.findAll()
+    }
+
+    @Post()
+    async createShortLinks(@Body() dto: CreateLinkDto){
+        return await this.service.createShortLink(dto)
     }
 }

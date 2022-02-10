@@ -9,4 +9,7 @@ export class CreateLinkDto {
 
     @IsOptional()
     short_link: string
+
+    @IsOptional()
+    _key: string
 }

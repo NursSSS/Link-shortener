@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateLinkDto, UpdateLinkDto } from './dto';
 import { LinkEntity } from './entity/link.entity';
-import { ILink } from './interface/link.interface';
 
 @Injectable()
 export class LinkService {
@@ -24,12 +23,12 @@ export class LinkService {
     }
 
     async filter(mail: string){
-        const link = this.entity.find( {email: mail} )
+        const link = await this.entity.find( {email: mail} )
         if(!link){
             throw new NotFoundException()
         }
 
-        return await link
+        return link
     }
 
     async redirect(key: string){

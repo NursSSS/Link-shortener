@@ -23,7 +23,6 @@ export class LinkService {
     }
 
     async filter(email: string){
-        console.log(email)
         const link = await this.entity.find({email: email})
         if(!link){
             throw new NotFoundException()
@@ -34,7 +33,6 @@ export class LinkService {
 
     async redirect(key: string){
         const link = await this.entity.findOne({_key: key})
-        console.log(link)
         if(!link){
             throw new NotFoundException()
         }

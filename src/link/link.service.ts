@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpCode, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateLinkDto, UpdateLinkDto } from './dto';
+import { CreateLinkDto, FindByKeyDto, UpdateLinkDto } from './dto';
 import { LinkEntity } from './entity/link.entity';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class LinkService {
     constructor(
         @InjectModel(LinkEntity.name)
         private readonly entity: Model<LinkEntity>
-      ) {}
+    ) {}
     
     async findAll(){
         return await this.entity.find()
@@ -22,8 +22,9 @@ export class LinkService {
         return await this.entity.create(dto)
     }
 
-    async filter(mail: string){
-        const link = await this.entity.find( {email: mail} )
+    async filter(email: string){
+        console.log(email)
+        const link = await this.entity.find({email: email})
         if(!link){
             throw new NotFoundException()
         }
@@ -32,7 +33,8 @@ export class LinkService {
     }
 
     async redirect(key: string){
-        const link = await this.entity.findOne( {_key: key} )
+        const link = await this.entity.findOne({_key: key})
+        console.log(link)
         if(!link){
             throw new NotFoundException()
         }
@@ -46,11 +48,13 @@ export class LinkService {
             throw new NotFoundException()
         }
 
-        return await this.entity.deleteOne( {link} )
+        await this.entity.deleteOne( {link} )
+        
+        return HttpCode(204)
     }
 
     async update(key: string, dto: UpdateLinkDto){
-        const link = await this.entity.findOne( {_key: key} )
+        const link = await this.entity.findOne({_key: key})
         if(!link){
             throw new NotFoundException()
         }

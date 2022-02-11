@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Redirect } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { BadRequestDto, CreateLinkDto, NotFoundedDto, UpdateLinkDto } from './dto';
+import { BadRequestDto, CreateLinkDto, FindByEmailDto, FindByKeyDto, NotFoundedDto, UpdateLinkDto } from './dto';
+import { FindByIdDto } from './dto/find-by-id.dto';
 import { LinkEntity } from './entity';
 import { LinkService } from './link.service';
 
@@ -36,14 +37,14 @@ export class LinkController {
     }
 
 
-    @Get('find/:mail')
+    @Get('find/:email')
     @ApiResponse({
         status: 201,
         description: 'Get links by email',
     })
     @ApiNotFoundResponse({ type: NotFoundedDto })
-    async filter(@Param('mail') mail: string){
-        return await this.service.filter(mail)
+    async filter(@Param() { email }: FindByEmailDto){
+        return await this.service.filter(email)
     }
 
 
@@ -54,7 +55,7 @@ export class LinkController {
     })
     @ApiNotFoundResponse({ type: NotFoundedDto })
     @Redirect('', 302)
-    async redirect(@Param('key') key: string){
+    async redirect(@Param() { key }: FindByKeyDto){
         return await this.service.redirect(key)
     }
 
@@ -70,7 +71,7 @@ export class LinkController {
     })
     @ApiNotFoundResponse({ type: NotFoundedDto })
     @HttpCode(204)
-    async deleteOne(@Param('id') id: string){
+    async deleteOne(@Param() { id }: FindByIdDto){
         return await this.service.deleteOne(id)
     }
 
@@ -87,7 +88,7 @@ export class LinkController {
         type: BadRequestDto
     })
     @ApiNotFoundResponse({ type: NotFoundedDto })
-    async update(@Param('key') key: string, @Body() dto: UpdateLinkDto){
+    async update(@Param() { key }: FindByKeyDto, @Body() dto: UpdateLinkDto){
         return await this.service.update(key, dto)
     }
 }

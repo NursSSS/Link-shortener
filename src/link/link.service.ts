@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateLinkDto } from './dto';
+import { CreateLinkDto, UpdateLinkDto } from './dto';
 import { LinkEntity } from './entity/link.entity';
 import { ILink } from './interface/link.interface';
 
@@ -48,5 +48,15 @@ export class LinkService {
         }
 
         return await this.entity.deleteOne( {link} )
+    }
+
+    async update(key: string, dto: UpdateLinkDto){
+        const link = await this.entity.findOne( {_key: key} )
+        if(!link){
+            throw new NotFoundException()
+        }
+
+        Object.assign(link, dto)
+        return await link.save()
     }
 }

@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Redirect } from '@nestjs/common';
-import { CreateLinkDto } from './dto';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Redirect } from '@nestjs/common';
+import { CreateLinkDto, UpdateLinkDto } from './dto';
 import { LinkService } from './link.service';
 
 @Controller('link')
@@ -28,7 +28,13 @@ export class LinkController {
     }
 
     @Delete(':id')
+    @HttpCode(204)
     async deleteOne(@Param('id') id: string){
         return await this.service.deleteOne(id)
+    }
+
+    @Put(':key')
+    async update(@Param('key') key: string, @Body() dto: UpdateLinkDto){
+        return await this.service.update(key, dto)
     }
 }

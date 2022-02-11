@@ -46,9 +46,7 @@ export class LinkService {
             throw new NotFoundException()
         }
 
-        await this.entity.deleteOne( {link} )
-        
-        return HttpCode(204)
+        return await this.entity.deleteOne( {link} )
     }
 
     async update(key: string, dto: UpdateLinkDto){

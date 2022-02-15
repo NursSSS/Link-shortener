@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Redirect } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BadRequestDto, CreateLinkDto, FindByEmailDto, FindByKeyDto, NotFoundedDto, UpdateLinkDto } from './dto';
+import { FindAllDto } from './dto/find-all.dto';
 import { FindByIdDto } from './dto/find-by-id.dto';
 import { LinkEntity } from './entity';
 import { LinkService } from './link.service';
@@ -15,7 +16,7 @@ export class LinkController {
     @ApiResponse({
         status: 200,
         description: 'Get all links of data base',
-        type: [LinkEntity],
+        type: [FindAllDto],
     })
     async findAll(){
         return await this.service.findAll()

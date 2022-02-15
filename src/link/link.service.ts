@@ -1,7 +1,7 @@
-import { HttpCode, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateLinkDto, FindByKeyDto, UpdateLinkDto } from './dto';
+import { CreateLinkDto, UpdateLinkDto } from './dto';
 import { LinkEntity } from './entity/link.entity';
 import * as randomstring from 'randomstring'
 
@@ -19,6 +19,8 @@ export class LinkService {
     async createShortLink(dto: CreateLinkDto){
         dto._key = randomstring.generate(7)
         dto.short_link = 'http://localhost:3000/link/' + dto._key
+        dto.transitions = 0
+
         return await this.entity.create(dto)
     }
 
@@ -36,6 +38,10 @@ export class LinkService {
         if(!link){
             throw new NotFoundException()
         }
+
+        link.transitions += 1
+        Object.assign(link)
+        await link.save()
 
         return { statusCode: 302, url: link.original_link}
     }

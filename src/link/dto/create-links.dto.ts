@@ -2,11 +2,15 @@ import { ApiProperty } from "@nestjs/swagger"
 import { IsEmail, IsOptional, IsUrl } from "class-validator"
 
 export class CreateLinkDto {
-    @ApiProperty()
+    @ApiProperty({
+        required: true
+    })
     @IsEmail()
     email: string
 
-    @ApiProperty()
+    @ApiProperty({
+        required: true
+    })
     @IsUrl()
     original_link: string
 
@@ -21,4 +25,10 @@ export class CreateLinkDto {
     })
     @IsOptional()
     _key: string
+
+    @ApiProperty({
+        required: false
+    })
+    @IsOptional()
+    transitions: number
 }

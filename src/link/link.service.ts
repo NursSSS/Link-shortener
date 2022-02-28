@@ -1,8 +1,9 @@
-import { HttpCode, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateLinkDto, FindByKeyDto, UpdateLinkDto } from './dto';
+import { CreateLinkDto, UpdateLinkDto } from './dto';
 import { LinkEntity } from './entity/link.entity';
+import * as randomstring from 'randomstring'
 
 @Injectable()
 export class LinkService {
@@ -16,14 +17,14 @@ export class LinkService {
     }
 
     async createShortLink(dto: CreateLinkDto){
-        let randomstring = require("randomstring")
         dto._key = randomstring.generate(7)
         dto.short_link = 'http://localhost:3000/link/' + dto._key
+        dto.transitions = 0
+
         return await this.entity.create(dto)
     }
 
     async filter(email: string){
-        console.log(email)
         const link = await this.entity.find({email: email})
         if(!link){
             throw new NotFoundException()
@@ -34,10 +35,13 @@ export class LinkService {
 
     async redirect(key: string){
         const link = await this.entity.findOne({_key: key})
-        console.log(link)
         if(!link){
             throw new NotFoundException()
         }
+
+        link.transitions += 1
+        Object.assign(link)
+        await link.save()
 
         return { statusCode: 302, url: link.original_link}
     }
@@ -48,9 +52,7 @@ export class LinkService {
             throw new NotFoundException()
         }
 
-        await this.entity.deleteOne( {link} )
-        
-        return HttpCode(204)
+        return await this.entity.deleteOne( {link} )
     }
 
     async update(key: string, dto: UpdateLinkDto){

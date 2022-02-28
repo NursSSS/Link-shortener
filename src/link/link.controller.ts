@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Redirect } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BadRequestDto, CreateLinkDto, FindByEmailDto, FindByKeyDto, NotFoundedDto, UpdateLinkDto } from './dto';
-import { FindByIdDto } from './dto/find-by-id.dto';
 import { LinkEntity } from './entity';
 import { LinkService } from './link.service';
 
@@ -39,7 +38,7 @@ export class LinkController {
 
     @Get('find/:email')
     @ApiResponse({
-        status: 201,
+        status: 200,
         description: 'Get links by email',
     })
     @ApiNotFoundResponse({ type: NotFoundedDto })
@@ -60,7 +59,7 @@ export class LinkController {
     }
 
 
-    @Delete(':id')
+    @Delete(':key')
     @ApiResponse({
         status: 204,
         description: 'Delete link by id'
@@ -71,8 +70,8 @@ export class LinkController {
     })
     @ApiNotFoundResponse({ type: NotFoundedDto })
     @HttpCode(204)
-    async deleteOne(@Param() { id }: FindByIdDto){
-        return await this.service.deleteOne(id)
+    async deleteOne(@Param() { key }: FindByKeyDto){
+        return await this.service.deleteOne(key)
     }
 
 
